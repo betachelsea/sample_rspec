@@ -1,4 +1,4 @@
-require "spec_helper"
+require "spec_helper_for_failure"
 
 describe "only failures 確認" do
   it "成功1" do

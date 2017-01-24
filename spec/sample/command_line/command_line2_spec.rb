@@ -6,3 +6,7 @@ describe "Command Line テスト ふたつめ" do
   it "レコード作成に関するテスト その3", required: true do; end
   it "レコード削除に関するテスト", type: 'heavy' do; end
 end
+
+describe "Command Line テスト みっつめ" do
+  it "関係のない名前" do; end
+end

@@ -1,30 +1,45 @@
 require "spec_helper_for_shared_context.rb"
 
-describe "include_contextを利用する" do
+shared_context "共有する条件" do
+  let(:shared_let) { "hello" }
+  before do
+    shared_let.concat("world")
+  end
+end
+
+describe "shared_contextのテスト" do
+  include_context "共有する条件"
+  it { expect(shared_let).to eq("helloworld") }
+end
+
+
+describe "include_contextを利用する その1" do
+  let(:sushi) { Sushi.new("たまご") }
+  include_context "寿司を握る"
+  it { expect(sushi.name).to eq("トロ") } # include_contextのほうが後なので
+end
+
+describe "include_contextを利用する その2" do
+  include_context "寿司を握る"
+  let(:sushi) { Sushi.new("いくら") }
+  it { expect(sushi.name).to eq("いくら") } # letのほうが後に実行
+end
+
+describe "include_contextを利用する その3" do
   include_context "寿司を握る" do
-    let(:tamago) { Sushi.new("たまご") }
+    let(:sushi) { Sushi.new("甘エビ") }
   end
-
-  it("たこが呼び出せる") { expect(tako.name).to eq("たこ") }
-  it("いかが呼び出せる") { expect(@ika.name).to eq("いか") }
-  it("たまごは上書きされている") { expect(tamago.name).to eq("たまご") }
-
-  describe "真蛸への変換" do
-    before { convert_tako_to_madako }
-    it "たこの名前を呼び出すと真蛸になっている" do
-      expect(tako.name).to eq("真蛸")
-    end
-  end
+  it { expect(sushi.name).to eq("甘エビ") }
 end
 
 describe "宣言で共有する", build_sushi: true do
-  it "たこを呼び出せる" do
-    expect(tako.name).to eq("たこ")
-  end
+  it { expect(sushi.name).to eq("トロ") }
 end
 
 describe "個別に共有する" do
-  it "たこを呼び出せる", build_sushi: true do
-    expect(tako.name).to eq("たこ")
+  let(:sushi) { Sushi.new("あなご") }
+  it "トロ定義済み", build_sushi: true do
+    expect(sushi.name).to eq("トロ")
   end
+  it { expect(sushi.name).to eq("あなご") }
 end
